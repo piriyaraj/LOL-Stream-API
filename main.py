@@ -105,15 +105,15 @@ if __name__ == "__main__":
             game_run_command, player_team, player_index = Tools.get_game_run_command(game_name, tag_line, summoner_id,player_puuid, api_key)
             if game_run_command in played_games:
                 print("   [-] Already played game found")
-                time.sleep(10)
+                time.sleep(1)
                 continue
             elif game_run_command == None:
                 print("   [-] Live game not found (Riot API)")
-                time.sleep(10)
+                time.sleep(1)
                 continue
             elif player_team == None:
                 print("   [-] Live game not found (OP.gg API)")
-                time.sleep(10)
+                time.sleep(1)
                 continue
             else:
                 played_games.append(game_run_command)
