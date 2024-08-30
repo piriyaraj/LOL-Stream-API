@@ -1,0 +1,14 @@
+venv
+media
+*\_
+*.log
+main.cmd
+log.txt
+assets/match_data.json
+assets/thumbnail.html
+media/thumb/thumb.png
+LOL automation.zip
+credentials/storage-oauth2.json
+yt/
+profiles/
+src/player_list.txt
