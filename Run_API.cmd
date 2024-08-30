@@ -1,12 +1,12 @@
 @echo off
-IF EXIST "LOL-Stream" (
-  cd LOL-Stream
+IF EXIST "LOL-Stream-API" (
+  cd LOL-Stream-API
   git restore .> log.txt 2>&1
   git pull > log.txt 2>&1
 ) ELSE (    
     echo "== Installing set up=="
-  git clone https://github.com/piriyaraj/LOL-Stream.git > log.txt 2>&1
-  cd LOL-Stream
+  git clone https://github.com/piriyaraj/LOL-Stream-API.git > log.txt 2>&1
+  cd LOL-Stream-API
 )
 if not exist venv (
     echo "    * Creating environment=="
