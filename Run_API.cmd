@@ -18,6 +18,6 @@ git pull> log.txt 2>&1
 @echo off
 pip install -r requirements.txt > log.txt 2>&1
 
-call python video_maker/main.py
+call python main.py
 
 pause
