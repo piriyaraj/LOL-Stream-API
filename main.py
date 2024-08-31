@@ -118,7 +118,7 @@ if __name__ == "__main__":
             else:
                 played_games.append(game_run_command)
                 print("   [-] Time delay: 150 seconds")
-                time.sleep(150)
+                # time.sleep(150)
                 Run(game_run_command,player_team, player_index)
                 
 
