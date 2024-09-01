@@ -84,14 +84,23 @@ def run_youtube_upload():
     all_yt_folders =  os.listdir("yt")
     for yt_folder in all_yt_folders:
         full_yt_folder = os.path.abspath(os.path.join("yt",yt_folder))
+        
         for file in os.listdir(full_yt_folder):
             if file.endswith(".mp4"):
                 break
         else:
-            shutil.rmtree(full_yt_folder)
+            is_today_created = str(yt_folder).split("_")[0] == datetime.now().strftime("%Y-%m-%d")
+            if not is_today_created:
+                shutil.rmtree(full_yt_folder)
 
         create_thumbnail(full_yt_folder)
         upload_to_youtube(full_yt_folder)
+
+def youtube_runner():
+    while True:
+        run_youtube_upload()
+        # print("hello world")
+        time.sleep(60*10)
         
 if __name__ == "__main__":
-    run_youtube_upload()
+    youtube_runner()

@@ -31,7 +31,7 @@ uploader_process_running = multiprocessing.Value('b', False)
 uploader_lock = multiprocessing.Lock()
 
 def run_video_uploader():
-    YoutubeHandler.run_youtube_upload()
+    YoutubeHandler.youtube_runner()
 
 played_games = []
 def Run(game_run_command, player_team, player_index, game_mode,thumbnail_data):
