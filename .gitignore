@@ -10,5 +10,9 @@ media/thumb/thumb.png
 LOL automation.zip
 credentials/storage-oauth2.json
 yt/
+yt-temp/
 profiles/
 src/player_list.txt
+src/client_secrets.json
+src/storage-oauth2.json
+src/thumbnail.html

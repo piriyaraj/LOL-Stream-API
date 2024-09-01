@@ -1,4 +1,7 @@
+from datetime import datetime
+import json
 import os
+import shutil
 import time
 
 import requests
@@ -7,12 +10,48 @@ from utils import RiotAPI
 
 played_games = []
 
+def remove_old_game_play_data(recorded_video_path):
+    if os.path.exists(recorded_video_path):
+        # Iterate over all the files and directories in the specified path
+        for filename in os.listdir(recorded_video_path):
+            file_path = os.path.join(recorded_video_path, filename)
+            try:
+                # If it's a file, remove it
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.remove(file_path)
+                # If it's a directory, remove it and its contents
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print(f"Failed to delete {file_path}. Reason: {e}")
+    
+        
+    recorded_video_path = "yt-temp"        
+    if os.path.exists(recorded_video_path):
+        # Iterate over all the files and directories in the specified path
+        for filename in os.listdir(recorded_video_path):
+            file_path = os.path.join(recorded_video_path, filename)
+            try:
+                # If it's a file, remove it
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.remove(file_path)
+                # If it's a directory, remove it and its contents
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print(f"Failed to delete {file_path}. Reason: {e}")
+
 def init():
-    if not os.path.exists("media"):
-        os.makedirs("media")
+    # if not os.path.exists("media"):
+    #     os.makedirs("media")
 
     if not os.path.exists("src"):
         os.makedirs("src")
+        
+    if not os.path.exists("yt"):
+        os.makedirs("yt")
+    if not os.path.exists("yt-temp"):
+        os.makedirs("yt-temp")
     
 def player_config(api_key):
     if not os.path.exists("src/player_list.txt"):
@@ -66,11 +105,11 @@ def get_player_team_index(game_name, tag_line, summoner_id):
     blue_team = {}
     red_count = 1
     blue_count = 1
-    url =f"https://lol-web-api.op.gg/api/v1.0/internal/bypass/spectates/euw/{summoner_id}"
+    url =f"https://lol-web-api.op.gg/api/v1.0/internal/bypass/spectates/euw/{summoner_id}?hl=en_US"
     response = requests.get(url)
     # print(response.status_code)
     if response.status_code!= 200:
-        return None, None
+        return None, None, None, None
     for players in response.json()['data']['participants']:
         if players['team_key'] == "RED":
             red_team[f"{players['summoner']['game_name']}:{players['summoner']['tagline']}"] = f"{red_count}:{players['position']}"
@@ -97,7 +136,41 @@ def get_player_team_index(game_name, tag_line, summoner_id):
         index = 4
     elif position == "SUPPORT":
         index = 5
-    return team, index
+    if team == "Red":
+            loser = list(blue_team.keys())[int(index)-1].split(":")[0]
+    else:
+        loser = list(red_team.keys())[int(index)-1].split(":")[0]
+    return team, index, loser, response.json()
+
+def create_match_data(match_data, match_data_opgg , game_name, loser):
+
+    for player in match_data_opgg['data']['participants']:
+        if game_name == player['summoner']['game_name']:
+            player_data_opgg = player
+            break
+    # print("Loser:",loser)
+    for player in match_data_opgg['data']['participants']:
+        if loser == player['summoner']['game_name']:
+            loser_player_data_opgg = player
+            break
+    champion_id = player_data_opgg['champion_id']
+    spells = player_data_opgg['spells']
+    
+    loser_player_champion_id = loser_player_data_opgg['champion_id']
+    spell_1 = match_data_opgg['data']['spellsById'][str(spells[0])]['name']
+    spell_2 = match_data_opgg['data']['spellsById'][str(spells[1])]['name']
+    lol_data ={}
+    lol_data['mvp'] = {}
+    lol_data['mvp']['champion'] = match_data_opgg['data']['championsById'][str(champion_id)]['name']
+    lol_data['mvp']['rank'] = player_data_opgg['summoner']['league_stats'][0]['tier_info']['tier']
+    lol_data['mvp']['spell'] = [spell_1,spell_2]
+    lol_data['loser'] = match_data_opgg['data']['championsById'][str(loser_player_champion_id)]['name']
+    lol_data['region'] = 'euw'
+    lol_data['date'] = str(datetime.now().strftime("%d/%m/%Y"))
+    lol_data['mvp']['name']  = game_name
+    lol_data['patch'] ="14.17"
+
+    return lol_data
 
 def get_game_run_command(game_name, tag_line, summoner_id,player_puuid,api_key):
     status, match_data = RiotAPI.get_in_game_match_data(player_puuid, api_key)
@@ -110,7 +183,12 @@ def get_game_run_command(game_name, tag_line, summoner_id,player_puuid,api_key):
         #     return "Already played game", None, None
         # else:
         #     played_games.append(command)
-        player_team, player_index = get_player_team_index(game_name, tag_line, summoner_id)
-        return command, player_team, player_index, game_mode
+        player_team, player_index,loser, match_data_opgg = get_player_team_index(game_name, tag_line, summoner_id)
+        
+        if player_team != None:
+            thumbnail_data = create_match_data(match_data, match_data_opgg, game_name, loser)
+        else:
+            thumbnail_data = {}
+        return command, player_team, player_index, game_mode, thumbnail_data
     else:
-        return None, None, None, None
+        return None, None, None, None, None
