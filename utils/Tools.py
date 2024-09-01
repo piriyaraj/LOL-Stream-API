@@ -103,6 +103,7 @@ def get_game_run_command(game_name, tag_line, summoner_id,player_puuid,api_key):
     status, match_data = RiotAPI.get_in_game_match_data(player_puuid, api_key)
     if status:
         observer_decrypt_key = match_data['observers']['encryptionKey']
+        game_mode = match_data['gameMode']
         game_id = match_data['gameId']
         command = f"""cd /d "C:\Riot Games\League of Legends\Game" & "League of Legends.exe" "spectator spectator.euw1.lol.pvp.net:8080 {observer_decrypt_key} {game_id} EUW1" "-UseRads" """
         # if command in played_games:
@@ -110,6 +111,6 @@ def get_game_run_command(game_name, tag_line, summoner_id,player_puuid,api_key):
         # else:
         #     played_games.append(command)
         player_team, player_index = get_player_team_index(game_name, tag_line, summoner_id)
-        return command, player_team, player_index
+        return command, player_team, player_index, game_mode
     else:
-        return None, None, None
+        return None, None, None, None

@@ -31,4 +31,4 @@ def get_in_game_match_data(puuid,api_key):
     else:
         return False, response.json()['status']['message']
 if __name__ == "__main__":
-    print(get_puuid("Sinstinct","TMT","RGAPI-88409b23-6977-4845-8749-66f7c6d85916"))
+    print(get_puuid("Sinstinct","TMT","RGAPI-e402533c-0411-4121-ab3a-62001784ae2f"))

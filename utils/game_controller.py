@@ -79,12 +79,12 @@ class ControlGamePlay:
         self.__player_index = str(playerIndex)
         self.game_run_command = game_run_command
 
-    def control(self):
+    def control(self, game_mode):
         self.close_game_setup()
         print("   [-] Start game control")
         subprocess.Popen( self.game_run_command, shell=True)
 
-
+        print("      [*] Game mode:",game_mode)
         status = self.start_game()
         if status == False:
             print("      [-] Game failed to open")
@@ -105,25 +105,28 @@ class ControlGamePlay:
         pydirectinput.keyDown('n')
         pydirectinput.keyUp('n')
         sleep(1)
-
-        # scoreboard
-        pydirectinput.keyDown('o')
-        pydirectinput.keyUp('o')
-        sleep(1)
-        # print_progress(51, self.total, prefix='Gameplay recording:')
         pydirectinput.keyDown('u')
         pydirectinput.keyUp('u')
         sleep(2)
-        # print_progress(56, self.total, prefix='Gameplay recording:')
-        # select champion
-        print("      [*] Selecting player")
-        self.__select_player()
+        
+        if game_mode == "CLASSIC":
+            # scoreboard
+            pydirectinput.keyDown('o')
+            pydirectinput.keyUp('o')
+            sleep(1)
+            # timeline hide
+            
+            # print_progress(56, self.total, prefix='Gameplay recording:')
+            # select champion
+        
+            print("      [*] Selecting player")
+            self.__select_player()
 
-        sleep(2)
-        # Extend character stats
-        pydirectinput.keyDown('c')
-        pydirectinput.keyUp('c')
-        sleep(1)
+            sleep(2)
+            # Extend character stats
+            pydirectinput.keyDown('c')
+            pydirectinput.keyUp('c')
+            sleep(1)
         # print_progress(59, self.total, prefix='Gameplay recording:')
         # zoom out
         print("      [*] Zoom out the screen!")

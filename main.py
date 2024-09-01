@@ -17,7 +17,7 @@ Tools.init()
 
 restartFlag = False
 played_games = []
-def Run(game_run_command, player_team, player_index):
+def Run(game_run_command, player_team, player_index, game_mode):
     global  restartFlag
     
     # playerTeam = None
@@ -51,7 +51,7 @@ def Run(game_run_command, player_team, player_index):
     print(f"   [-] player index: {player_index}")
     # subprocess.run(game_run_command, shell=True)
     gameController = game_controller.ControlGamePlay(player_team, player_index, game_run_command)
-    out = gameController.control()
+    out = gameController.control(game_mode)
     if out == "crashed":
         played_games.pop()
     #     end_time = time.time()
@@ -102,7 +102,7 @@ if __name__ == "__main__":
             count = 0
         try:
             # print(playerLink)
-            game_run_command, player_team, player_index = Tools.get_game_run_command(game_name, tag_line, summoner_id,player_puuid, api_key)
+            game_run_command, player_team, player_index, game_mode = Tools.get_game_run_command(game_name, tag_line, summoner_id,player_puuid, api_key)
             if game_run_command in played_games:
                 print("   [-] Already played game found")
                 time.sleep(1)
@@ -119,7 +119,7 @@ if __name__ == "__main__":
                 played_games.append(game_run_command)
                 # print("   [-] Time delay: 150 seconds")
                 # time.sleep(150)
-                Run(game_run_command,player_team, player_index)
+                Run(game_run_command,player_team, player_index, game_mode)
                 
 
         except Exception as e:
