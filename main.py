@@ -44,7 +44,6 @@ def Run(game_run_command, player_team, player_index, game_mode,thumbnail_data):
     
     gameController = game_controller.ControlGamePlay(player_team, player_index, game_run_command)
     out = gameController.control(game_mode)
-    out = True
     if out == "crashed":
         played_games.pop()
     elif enable_yt:
