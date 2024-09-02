@@ -100,6 +100,10 @@ def player_config(api_key):
         for player in updated_list:
             file.write(player + "\n")
             
+def select_loser(position,players):
+    for key,value in players.items():
+        if position == value.split(":")[1]:
+            return key.split(":")[0]
 def get_player_team_index(game_name, tag_line, summoner_id):
     red_team = {}
     blue_team = {}
@@ -137,9 +141,16 @@ def get_player_team_index(game_name, tag_line, summoner_id):
     elif position == "SUPPORT":
         index = 5
     if team == "Red":
+        if position not in ["TOP","JUNGLE","MID","ADC","SUPPORT"]:
             loser = list(blue_team.keys())[int(index)-1].split(":")[0]
+        else:
+            loser = select_loser(position,blue_team)
     else:
-        loser = list(red_team.keys())[int(index)-1].split(":")[0]
+        if position not in ["TOP","JUNGLE","MID","ADC","SUPPORT"]:
+            loser = list(red_team.keys())[int(index)-1].split(":")[0]
+        else:
+            loser = select_loser(position,red_team)
+    # print(loser)
     return team, index, loser, response.json()
 
 def create_match_data(match_data, match_data_opgg , game_name, loser):
