@@ -142,12 +142,18 @@ def get_player_team_index(game_name, tag_line, summoner_id):
         index = 5
     if team == "Red":
         if position not in ["TOP","JUNGLE","MID","ADC","SUPPORT"]:
-            loser = list(blue_team.keys())[int(index)-1].split(":")[0]
+            try:
+                loser = list(blue_team.keys())[int(index)-1].split(":")[0]
+            except:
+                loser = "out of range"
         else:
             loser = select_loser(position,blue_team)
     else:
         if position not in ["TOP","JUNGLE","MID","ADC","SUPPORT"]:
-            loser = list(red_team.keys())[int(index)-1].split(":")[0]
+            try:
+                loser = list(red_team.keys())[int(index)-1].split(":")[0]
+            except:
+                loser = "out of range"
         else:
             loser = select_loser(position,red_team)
     # print(loser)
@@ -200,6 +206,8 @@ def get_game_run_command(game_name, tag_line, summoner_id,player_puuid,api_key):
             thumbnail_data = create_match_data(match_data, match_data_opgg, game_name, loser)
         else:
             thumbnail_data = {}
+        if loser == "out of range":
+            game_mode = "Out of range"
         return command, player_team, player_index, game_mode, thumbnail_data
     else:
         return None, None, None, None, None
