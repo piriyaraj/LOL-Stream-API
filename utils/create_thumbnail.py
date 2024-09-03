@@ -34,8 +34,11 @@ def iconReplace(champion):
         return "RekSai"
     elif (name == "Wukong"):
         return "MonkeyKing"
+    elif (name == "ChoGath"):
+        return "Chogath"
     elif (name == "Dr.Mundo"):
         return "DrMundo"
+    
     else:
         return name
 
@@ -203,6 +206,7 @@ class CreateThumbnail:
         #print_progress(40, self.total, prefix='   > Creating Thumbnail:')
         oppIconImg = iconReplace(championRaw)
         loserIcon = iconReplace(loser)
+        # print(f'https://opgg-static.akamaized.net/meta/images/lol/14.11.1/champion/{loserIcon}.png')
         self.__create_html(
             date=self.lol_data['date'],
             imgUrl=imgUrl,
