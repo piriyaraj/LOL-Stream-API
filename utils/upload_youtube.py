@@ -165,7 +165,8 @@ Follow me:
         )
 
         video_id = self.__resumable_upload(insert_request)
-        self.__upload_thumbnail(youtube, video_id)
+        if os.path.exists(self.__thumb_file):
+            self.__upload_thumbnail(youtube, video_id)
         # self.__add_video_to_playlist(video_id,playlist_name_list)
         
     def __resumable_upload(self, insert_request):

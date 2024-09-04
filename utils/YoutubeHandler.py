@@ -92,8 +92,9 @@ def run_youtube_upload():
             is_today_created = str(yt_folder).split("_")[0] == datetime.now().strftime("%Y-%m-%d")
             if not is_today_created:
                 shutil.rmtree(full_yt_folder)
-
-        create_thumbnail(full_yt_folder)
+        try:
+            create_thumbnail(full_yt_folder)
+        except:pass
         upload_to_youtube(full_yt_folder)
 
 def youtube_runner():

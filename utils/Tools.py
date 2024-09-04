@@ -166,10 +166,13 @@ def create_match_data(match_data, match_data_opgg , game_name, loser):
             player_data_opgg = player
             break
     # print("Loser:",loser)
+    loser_player_data_opgg = {}
     for player in match_data_opgg['data']['participants']:
         if loser == player['summoner']['game_name']:
             loser_player_data_opgg = player
             break
+    if loser_player_data_opgg == {}:
+        return {}
     champion_id = player_data_opgg['champion_id']
     spells = player_data_opgg['spells']
     
