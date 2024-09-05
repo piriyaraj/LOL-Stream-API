@@ -185,7 +185,10 @@ def create_match_data(match_data, match_data_opgg , game_name, loser):
     
     lol_data['mvp'] = {}
     lol_data['mvp']['champion'] = match_data_opgg['data']['championsById'][str(champion_id)]['name']
-    lol_data['mvp']['rank'] = player_data_opgg['summoner']['league_stats'][0]['tier_info']['tier']
+    try:
+        lol_data['mvp']['rank'] = player_data_opgg['summoner']['league_stats'][0]['tier_info']['tier']
+    except:
+        lol_data['mvp']['rank'] = "Not available"
     lol_data['mvp']['spell'] = [spell_1,spell_2]
     
     lol_data['region'] = 'euw'
