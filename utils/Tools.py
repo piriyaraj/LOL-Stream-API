@@ -160,7 +160,7 @@ def get_player_team_index(game_name, tag_line, summoner_id):
     return team, index, loser, response.json()
 
 def create_match_data(match_data, match_data_opgg , game_name, loser):
-
+    lol_data ={}
     for player in match_data_opgg['data']['participants']:
         if game_name == player['summoner']['game_name']:
             player_data_opgg = player
@@ -171,20 +171,23 @@ def create_match_data(match_data, match_data_opgg , game_name, loser):
         if loser == player['summoner']['game_name']:
             loser_player_data_opgg = player
             break
-    if loser_player_data_opgg == {}:
-        return {}
+    # if loser_player_data_opgg == {}:
+    #     return {}
     champion_id = player_data_opgg['champion_id']
     spells = player_data_opgg['spells']
-    
-    loser_player_champion_id = loser_player_data_opgg['champion_id']
+    try:
+        loser_player_champion_id = loser_player_data_opgg['champion_id']
+        lol_data['loser'] = match_data_opgg['data']['championsById'][str(loser_player_champion_id)]['name']
+    except:
+        lol_data['loser'] = "Not available"
     spell_1 = match_data_opgg['data']['spellsById'][str(spells[0])]['name']
     spell_2 = match_data_opgg['data']['spellsById'][str(spells[1])]['name']
-    lol_data ={}
+    
     lol_data['mvp'] = {}
     lol_data['mvp']['champion'] = match_data_opgg['data']['championsById'][str(champion_id)]['name']
     lol_data['mvp']['rank'] = player_data_opgg['summoner']['league_stats'][0]['tier_info']['tier']
     lol_data['mvp']['spell'] = [spell_1,spell_2]
-    lol_data['loser'] = match_data_opgg['data']['championsById'][str(loser_player_champion_id)]['name']
+    
     lol_data['region'] = 'euw'
     lol_data['date'] = str(datetime.now().strftime("%d/%m/%Y"))
     lol_data['mvp']['name']  = game_name
@@ -209,8 +212,9 @@ def get_game_run_command(game_name, tag_line, summoner_id,player_puuid,api_key):
             thumbnail_data = create_match_data(match_data, match_data_opgg, game_name, loser)
         else:
             thumbnail_data = {}
-        if loser == "out of range":
-            game_mode = "Out of range"
+        # if loser == "out of range":
+        game_mode = match_data['gameMode']
+        thumbnail_data['gamemode'] = game_mode
         return command, player_team, player_index, game_mode, thumbnail_data
     else:
         return None, None, None, None, None

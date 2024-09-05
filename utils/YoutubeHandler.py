@@ -58,6 +58,8 @@ def create_thumbnail(full_yt_folder):
         data = json.load(file)  # Parse JSON data from the file
     if os.path.exists(os.path.join(full_yt_folder,"thumbnail.png")):
         return
+    if data == {} or data['gamemode'] != "CLASSIC":
+        return
     thumbnail_creator = CreateThumbnail(data,full_yt_folder)
     thumbnail_creator.create_thumbnail()
     pass
@@ -86,15 +88,13 @@ def run_youtube_upload():
         full_yt_folder = os.path.abspath(os.path.join("yt",yt_folder))
         
         for file in os.listdir(full_yt_folder):
-            if file.endswith(".mp4"):
+            if file.endswith(".mp4") or file.endswith(".mkv"):
                 break
         else:
             is_today_created = str(yt_folder).split("_")[0] == datetime.now().strftime("%Y-%m-%d")
             if not is_today_created:
                 shutil.rmtree(full_yt_folder)
-        try:
-            create_thumbnail(full_yt_folder)
-        except:pass
+        create_thumbnail(full_yt_folder)
         upload_to_youtube(full_yt_folder)
 
 def youtube_runner():
