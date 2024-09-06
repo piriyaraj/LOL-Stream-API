@@ -29,6 +29,6 @@ def get_in_game_match_data(puuid,api_key):
     if response.status_code == 200:
         return True,response.json()
     else:
-        return False, response.json()['status']['message']
+        return False, "Failed to get data"
 if __name__ == "__main__":
     print(get_puuid("Sinstinct","TMT","RGAPI-e402533c-0411-4121-ab3a-62001784ae2f"))

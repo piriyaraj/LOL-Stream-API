@@ -217,6 +217,8 @@ def get_game_run_command(game_name, tag_line, summoner_id,player_puuid,api_key):
             thumbnail_data = {}
         # if loser == "out of range":
         game_mode = match_data['gameMode']
+        if game_mode == "CHERRY":
+            game_mode = "ARENA"
         thumbnail_data['gamemode'] = game_mode
         return command, player_team, player_index, game_mode, thumbnail_data
     else:
